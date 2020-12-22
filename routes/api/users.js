@@ -3,7 +3,6 @@ var router = express.Router();
 var User = require('../../models').User
 
 router.get('/users', function (req, res, next) {
-
   (async () => {
     let user = await User.findAll({
       where: {
@@ -15,8 +14,6 @@ router.get('/users', function (req, res, next) {
       console.log(JSON.stringify(u));
     }
   })();
-
-
 });
 
 module.exports = router;
