@@ -15,36 +15,30 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //config
-const bcrypt = require('bcrypt');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
-const initializePassport = require('./passport-config');
+const initializePassport = require('./utils/passport-config');
 const User = require('./models').User;
 
 initializePassport(
   passport,
-  async function(account){
-    let user = await User.findAll({
-      where: {
-        account: account
-      }
-    });
-    return user;
-  },
-  async function(id){
-    let user = await User.findAll({
-      where: {
-        id: id
-      }
-    });
-    return user;
-  }
+  async account=>await User.findAll({
+    where: {
+      account: account
+    }
+  }),
+  async id=>await User.findAll({
+    where: {
+      id: id
+    }
+  })
 )
 const Routers = require('./routes/index')(passport);
 app.use(flash());
 app.use(session({ secret: 'popo', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
+app.use(passport.session());
 
 Routers.forEach(route => {
   app.use(route);

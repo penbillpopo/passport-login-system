@@ -1,7 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const {authenticated} = require('../../utils/passport-func')
 
-router.get('/member', function (req, res, next) {
+
+router.get('/member',authenticated, function (req, res, next) {
   res.render('member');
 });
 

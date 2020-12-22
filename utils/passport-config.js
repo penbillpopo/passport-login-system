@@ -1,7 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
 
-
 async function initialize(passport,getUserByAccount,getUserById) {
     const authenticateUser = async (account, password, done) => {
         const userArr = await getUserByAccount(account);
@@ -13,6 +12,17 @@ async function initialize(passport,getUserByAccount,getUserById) {
             return done(null, false, { message: "no user" })
         }
         try {
+            // if (await bcrypt.compare(password, user.password)) {
+            //     const hashedAccount = await bcrypt.hash(user.account, 10)
+            //     await user.update(
+            //         {is_login_key:hashedAccount},
+            //         {where: {id: user.id}}
+            //     )
+            //     res.cookie('is_login_key', hashedAccount)
+            //     return done(null, user)
+            // } else {
+            //     return done(null, false, { message: "Password incorrect" })
+            // }
             if (await bcrypt.compare(password, user.password)) {
                 return done(null, user)
             } else {
@@ -23,7 +33,9 @@ async function initialize(passport,getUserByAccount,getUserById) {
         }
     }
     passport.use(new LocalStrategy({ usernameField: 'account' }, authenticateUser))
-    passport.serializeUser((user, done) => done(null,user.id))
+    passport.serializeUser((user, done) => {
+        done(null,user.id)
+    })
     passport.deserializeUser((id, done) => { 
         return done(null,getUserById(id))
     })
