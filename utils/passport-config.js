@@ -12,17 +12,6 @@ async function initialize(passport,getUserByAccount,getUserById) {
             return done(null, false, { message: "no user" })
         }
         try {
-            // if (await bcrypt.compare(password, user.password)) {
-            //     const hashedAccount = await bcrypt.hash(user.account, 10)
-            //     await user.update(
-            //         {is_login_key:hashedAccount},
-            //         {where: {id: user.id}}
-            //     )
-            //     res.cookie('is_login_key', hashedAccount)
-            //     return done(null, user)
-            // } else {
-            //     return done(null, false, { message: "Password incorrect" })
-            // }
             if (await bcrypt.compare(password, user.password)) {
                 return done(null, user)
             } else {
